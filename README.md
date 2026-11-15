@@ -3,7 +3,7 @@
 **Estude necessidades, avalie funcionalidades observáveis e desenvolva soluções alternativas originais.**
 
 **Autoria:** Walney Moreira Klein — walneyk@hotmail.com  
-**Situação:** protótipo desktop v0.1 em desenvolvimento, com compilação Windows x64 configurada no GitHub Actions (execução ainda precisa ser verificada).
+**Situação:** protótipo desktop v0.1 em desenvolvimento. A primeira compilação Windows x64 e os autotestes foram aprovados no GitHub Actions em 15/11/2026 ([execução #43673881491](https://github.com/WalneyNF/WMK-Craft-Studio/actions/runs/43673881491)). Ainda é necessária homologação visual e funcional manual em um desktop Windows real.
 
 > **Política de propriedade intelectual — essencial:** o WMK Craft Studio **NÃO é um clonador de programas**. Ele **não deve** copiar software de terceiros, reproduzir interfaces de maneira substancialmente idêntica, descompilar arquivos, extrair código, contornar proteções, usar marcas alheias para causar confusão, nem incorporar imagens/sons/documentação protegidos sem autorização. O propósito é criar **soluções próprias e independentes** a partir da identificação de necessidades e de funcionalidades observáveis lícitas.
 
@@ -47,7 +47,7 @@ python main.py --self-test .\teste-wmk
 
 O autoteste cria um projeto de exemplo na pasta informada. Utilize uma pasta vazia para cada execução.
 
-No GitHub, acesse **Actions → WMK Craft Studio - Testes e Windows x64**. O workflow contém testes em Linux e Windows, compilação com PyInstaller e publicação de um ZIP como artefato. A compilação deve ser considerada validada somente após uma execução bem-sucedida.
+No GitHub, acesse **Actions → WMK Craft Studio - Testes e Windows x64**. O workflow contém testes em Linux e Windows, compilação com PyInstaller e publicação de um ZIP como artefato. O primeiro workflow concluiu com sucesso e gerou o ZIP portátil; novas alterações devem passar novamente pelo CI.
 
 ## Como preservar a originalidade?
 
