@@ -15,7 +15,7 @@ Este documento separa o que existe do que ainda precisa ser implementado. Não s
 - [x] Detectar ferramentas externas presentes no PATH, **sem executá-las**
 - [x] Workflow para testes e empacotamento Windows x64
 - [x] Autoteste de EXE que escreve e relê um projeto sem abrir janela
-- [ ] Confirmar execução bem-sucedida do workflow no GitHub Actions
+- [x] Compilação e testes Linux/Windows aprovados em [execução #43673881491](https://github.com/WalneyNF/WMK-Craft-Studio/actions/runs/43673881491); compila EXE, executa autoteste e envia ZIP portátil
 - [ ] Testar visualmente o executável em um desktop Windows real
 
 ## Etapa 0.2 — Usabilidade e projetos
