@@ -42,6 +42,8 @@ class SiteFactory:
 
     def create(self, name: str, prompt: str, kind: str = "institucional", color: str = "verde") -> dict:
         name = clean(name, 100)
+        if "/" in name or "\\" in name or ".." in name:
+            raise ValueError("O nome não pode conter separadores de pasta ou dois pontos consecutivos.")
         prompt = clean(prompt, MAX_INPUT)
         if kind not in KINDS or color not in COLORS:
             raise ValueError("Selecione um modelo e uma cor válidos.")
