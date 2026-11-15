@@ -1,0 +1,78 @@
+name: WMK Craft Studio - Testes e Windows x64
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wmk-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  tests:
+    name: Testes do núcleo (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Executar testes
+        run: python -m unittest discover -s tests -v
+      - name: Teste de inicialização sem interface
+        run: python main.py --self-test "${{ runner.temp }}/wmk-smoke-linux"
+
+  windows:
+    name: Compilar Windows x64
+    needs: tests
+    runs-on: windows-2022
+    timeout-minutes: 45
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Testar no Windows
+        run: python -m unittest discover -s tests -v
+      - name: Instalar empacotador
+        run: python -m pip install --disable-pip-version-check pyinstaller==6.16.0
+      - name: Compilar interface gráfica
+        run: python -m PyInstaller --noconfirm --clean --onedir --windowed --name WMK-Craft-Studio main.py
+      - name: Executar EXE sem abrir janela
+        shell: pwsh
+        run: |
+          $smoke = Join-Path $env:RUNNER_TEMP "wmk-smoke-windows"
+          $exe = Join-Path $PWD "dist/WMK-Craft-Studio/WMK-Craft-Studio.exe"
+          $process = Start-Process -FilePath $exe -ArgumentList @("--self-test", $smoke) -PassThru -Wait
+          if ($process.ExitCode -ne 0) { throw "Autoteste falhou: $($process.ExitCode)" }
+          if (-not (Test-Path (Join-Path $smoke "teste-de-compilacao/wmk_project.json"))) {
+            throw "Autoteste não gerou o arquivo de projeto."
+          }
+          if (-not (Test-Path (Join-Path $smoke "teste-de-compilacao/relatorios/estado.md"))) {
+            throw "Autoteste não gerou o relatório Markdown."
+          }
+      - name: Criar distribuição portátil
+        shell: pwsh
+        run: |
+          Copy-Item README.md dist/WMK-Craft-Studio/
+          Copy-Item LICENSE dist/WMK-Craft-Studio/
+          Copy-Item -Recurse docs dist/WMK-Craft-Studio/
+          Compress-Archive -Path dist/WMK-Craft-Studio -DestinationPath WMK-Craft-Studio-Windows-x64.zip
+      - name: Publicar ZIP para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: WMK-Craft-Studio-Windows-x64
+          path: WMK-Craft-Studio-Windows-x64.zip
+          if-no-files-found: error
+          retention-days: 14
