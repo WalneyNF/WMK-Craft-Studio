@@ -9,6 +9,7 @@ Este documento separa o que existe do que ainda precisa ser implementado. Não s
 - [x] Galeria de projetos locais
 - [x] Criar, reabrir e salvar projetos em JSON com gravação atômica
 - [x] Tipos: livre, web, desktop e jogo (classificação, **não** geração)
+- [x] Estudo funcional: observações permitidas, necessidades e proposta autoral em Markdown
 - [x] Registro de tarefas e histórico
 - [x] Copiar e salvar relatório Markdown
 - [x] Detectar ferramentas externas presentes no PATH, **sem executá-las**
@@ -35,12 +36,17 @@ Este documento separa o que existe do que ainda precisa ser implementado. Não s
 - [ ] Restrições por diretório de trabalho, limites de tempo e cancelamento
 - [ ] Testes de integração com comandos reais e resultados verificáveis
 
-## Etapa 0.4 — REA e investigação
+## Etapa 0.4 — Provedores de IA: FreeLLMAPI e alternativas
 
-- [ ] Adaptador MCP para REA, transporte stdio autenticado/local
-- [ ] Aprovação por projeto para investigar arquivos e executáveis
-- [ ] Evidências técnicas e marcação de hipóteses/incertezas
-- [ ] Preservar direitos, licenças e sinais de proveniência
+- [ ] Detectar serviço local FreeLLMAPI somente em loopback, sem expor chaves
+- [ ] Configurar acesso à API compatível com OpenAI por perfil e projeto
+- [ ] Segregar dados e confirmar consentimento antes de enviá-los a modelos remotos
+- [ ] Exibir modelos disponíveis, perfis, custos e limites de uso
+- [ ] Permitir funcionamento sem API/IA, mantendo templates e armazenamento locais
+- [ ] Criar assistentes para **abstrair requisitos e implementar soluções originais**
+- [ ] Rejeitar solicitações de clonagem, extração de código ou engenharia reversa
+
+Veja [PROVEDORES_IA.md](PROVEDORES_IA.md). O FreeLLMAPI é opcional; o REA não integra este produto.
 
 ## Etapa 0.5 — Quality Gate independente
 
@@ -65,3 +71,4 @@ Este documento separa o que existe do que ainda precisa ser implementado. Não s
 3. A aplicação local deve continuar útil sem chave de IA.
 4. Segredos ficam fora do repositório e não aparecem em logs.
 5. As integrações permanecem separadas para permitir atualização dos forks.
+6. O produto nunca poderá se tornar ferramenta de clonagem ou engenharia reversa: veja [POLITICA_DE_ORIGINALIDADE.md](POLITICA_DE_ORIGINALIDADE.md).
