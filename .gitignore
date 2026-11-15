@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Compilação
+build/
+dist/
+*.spec
+*.zip
+
+# Arquivos locais e dados privados
+.env
+.env.*
+!.env.example
+wmk_project.json
+settings.json
+*.log
+.DS_Store
+Thumbs.db
