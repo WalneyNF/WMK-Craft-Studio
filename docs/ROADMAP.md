@@ -2,6 +2,21 @@
 
 Este documento separa o que existe do que ainda precisa ser implementado. Não se deve declarar uma etapa concluída apenas porque foi planejada.
 
+## Primeiro MVP web no-code — implementação experimental
+
+- [x] Interface web local em português, com galeria e três painéis ajustáveis
+- [x] Criar um site original de demonstração a partir de título, descrição, tipo e cor
+- [x] Exibir a aplicação gerada em iframe sandboxed, com opção de celular/desktop
+- [x] Alterações guiadas por comandos simples em português (não IA)
+- [x] Visualizar HTML/CSS/JS e baixar ZIP
+- [x] Testes automatizados de geração, persistência, API e origem das requisições
+- [x] Empacotamento Windows (workflow configurado; confirmar sucesso do build)
+- [ ] Gerar sites com modelo de IA, mudanças livres e assets próprios/licenciados
+- [ ] Editor de código com salvamento, versão anterior e testes de regressão
+- [ ] Aplicativo administrativo com banco SQLite e jogo 2D jogável
+
+Veja [PRIMEIRO-SITE.md](PRIMEIRO-SITE.md). Este marco não substitui a exigência de geração full-stack.
+
 ## Direção prioritária — experiência sem código
 
 **Público:** iniciantes que desejam criar sites, web apps e jogos 2D sem dominar programação.

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10171e">
+  <title>WMK Craft Studio — Crie sem programar</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="application">
+    <header class="topbar">
+      <a class="logo" href="/" aria-label="WMK Craft Studio — início">
+        <span class="logo-box">W</span><span>WMK <b>Craft Studio</b></span>
+      </a>
+      <div class="top-right">
+        <span class="mode-label" title="Os sites são montados com templates locais. Modelos de IA ainda não estão conectados.">Protótipo local · sem IA</span>
+        <button id="newProject" class="top-button" type="button">+ Novo projeto</button>
+      </div>
+    </header>
+    <main class="workspace">
+      <aside class="projects panel">
+        <div class="pane-head"><span>Meus projetos</span><span class="minor">Sites</span></div>
+        <div class="pane-body">
+          <label class="sr-only" for="filterProjects">Pesquisar projetos</label>
+          <input id="filterProjects" class="search" placeholder="Pesquisar projetos..." autocomplete="off">
+          <div id="projectList" class="project-list" aria-live="polite"></div>
+          <div class="info-card"><strong>Crie algo de verdade.</strong>
+            <p>Este primeiro protótipo já gera sites editáveis e permite baixar o código. Web apps e jogos vêm nas próximas etapas.</p>
+          </div>
+        </div>
+      </aside>
+      <div class="resize-handle" id="resizeLeft" role="separator" aria-orientation="vertical" aria-label="Ajustar largura de projetos" tabindex="0"></div>
+      <section class="conversation panel">
+        <div class="pane-head"><span>Assistente de criação</span><span class="minor">pt-BR</span></div>
+        <div class="chat-scroll" id="chatScroll">
+          <div class="chat-message assistant"><span class="chat-avatar">W</span>
+            <div class="message"><strong>O que você deseja criar?</strong>
+              <p>Comece por um site institucional, vitrine de produtos ou portfólio. Descreva sua ideia em português e veja a prévia real ao lado.</p>
+              <p>Por enquanto, usamos modelos autorais locais. A IA livre e os jogos ainda serão integrados.</p></div>
+          </div>
+          <div id="conversationLog" aria-live="polite"></div>
+        </div>
+        <div class="composer">
+          <form id="promptForm" class="editor-form">
+            <label for="siteName">Nome do projeto</label>
+            <input id="siteName" maxlength="100" placeholder="Ex.: Flor do Vale" required>
+            <label for="sitePrompt">Descreva seu site</label>
+            <textarea id="sitePrompt" maxlength="4000" rows="3" required placeholder="Ex.: Uma floricultura que cria arranjos para festas e presentes, com atendimento personalizado."></textarea>
+            <div class="form-grid">
+              <div><label for="siteKind">Modelo</label>
+                <select id="siteKind">
+                  <option value="institucional">Institucional</option>
+                  <option value="vitrine">Vitrine de produtos</option>
+                  <option value="portfolio">Portfólio</option>
+                </select>
+              </div>
+              <div><label for="siteColor">Cor principal</label>
+                <select id="siteColor">
+                  <option value="verde">Verde</option><option value="azul">Azul</option>
+                  <option value="roxo">Roxo</option><option value="laranja">Laranja</option>
+                  <option value="rosa">Rosa</option><option value="vermelho">Vermelho</option>
+                  <option value="preto">Grafite</option><option value="dourado">Dourado</option>
+                </select>
+              </div>
+            </div>
+            <button class="primary-button" id="createButton" type="submit">Criar site e visualizar <span aria-hidden="true">↗</span></button>
+          </form>
+          <form id="changeForm" class="editor-form hidden">
+            <label for="changePrompt">O que deseja modificar?</label>
+            <textarea id="changePrompt" maxlength="500" rows="3" required placeholder="Ex.: Mude a cor para azul"></textarea>
+            <div class="hint">Comandos disponíveis: cor, título, texto principal e nova seção. Não é conversa com IA nesta versão.</div>
+            <button class="primary-button" type="submit" id="changeButton">Aplicar alteração <span aria-hidden="true">↗</span></button>
+            <button class="secondary-button" type="button" id="copyBrief">Copiar resumo MD</button>
+          </form>
+          <div id="notice" class="notice" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+      <div class="resize-handle" id="resizeMid" role="separator" aria-orientation="vertical" aria-label="Ajustar largura da conversa" tabindex="0"></div>
+      <section class="preview panel">
+        <div class="pane-head">
+          <span>Seu projeto</span>
+          <span class="minor" id="projectStatus">Aguardando criação</span>
+        </div>
+        <div class="preview-toolbar">
+          <div class="tabbar" role="tablist" aria-label="Visualização do projeto">
+            <button id="tabPreview" class="tab active" type="button" role="tab" aria-selected="true">Prévia</button>
+            <button id="tabCode" class="tab" type="button" role="tab" aria-selected="false">Código</button>
+            <button id="tabInfo" class="tab" type="button" role="tab" aria-selected="false">Detalhes</button>
+          </div>
+          <div class="actions">
+            <button class="small-button" id="viewMobile" type="button" title="Visualizar largura de celular">Celular</button>
+            <button class="small-button" id="viewDesktop" type="button" title="Visualizar largura de desktop">Desktop</button>
+            <button class="small-button" id="reloadPreview" type="button" title="Atualizar prévia">↻</button>
+            <button class="small-button emphasis" id="downloadProject" type="button" disabled>Baixar ZIP</button>
+          </div>
+        </div>
+        <div id="previewContainer" class="preview-container">
+          <div id="emptyPreview" class="empty-state">
+            <div class="empty-graphic"><span>W</span></div>
+            <h1>Seu próximo projeto começa aqui.</h1>
+            <p>Descreva a ideia no painel da esquerda. Uma prévia executável aparecerá neste espaço.</p>
+            <span class="empty-note">Sem programação · Em português · Arquivos exportáveis</span>
+          </div>
+          <div class="frame-wrap hidden" id="frameWrap">
+            <iframe id="siteFrame" title="Prévia do site gerado" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
+          </div>
+          <div id="codePane" class="code-pane hidden">
+            <label for="codeSelect">Arquivo gerado</label>
+            <select id="codeSelect"><option value="index.html">index.html</option><option value="style.css">style.css</option><option value="script.js">script.js</option></select>
+            <p class="readonly-note">Visualização de código. Os arquivos podem ser editados após baixar o ZIP.</p>
+            <pre id="codeText"></pre>
+          </div>
+          <div id="infoPane" class="info-pane hidden"></div>
+        </div>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <span>Walney Moreira Klein — walneyk@hotmail.com</span>
+      <span>WMK Craft Studio · Primeiro MVP sem código</span>
+    </footer>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

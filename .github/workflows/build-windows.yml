@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, feat/fundacao-desktop-actions]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +30,11 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Teste de inicialização sem interface
         run: python main.py --self-test "${{ runner.temp }}/wmk-smoke-linux"
+      - name: Teste do Studio Web
+        run: python studio_web.py --self-test
+      - name: Verificar JavaScript
+        run: node --check studio/app.js
+
 
   windows:
     name: Compilar Windows x64
@@ -45,10 +50,21 @@ jobs:
           python-version: "3.12"
       - name: Testar no Windows
         run: python -m unittest discover -s tests -v
+      - name: Verificar JavaScript
+        run: node --check studio/app.js
       - name: Instalar empacotador
         run: python -m pip install --disable-pip-version-check pyinstaller==6.16.0
       - name: Compilar interface gráfica
         run: python -m PyInstaller --noconfirm --clean --onedir --windowed --name WMK-Craft-Studio main.py
+      - name: Compilar Studio Web portátil
+        shell: pwsh
+        run: python -m PyInstaller --noconfirm --clean --onefile --console --add-data "studio;studio" --name WMK-Studio-Web studio_web.py
+      - name: Executar autoteste do Studio Web compilado
+        shell: pwsh
+        run: |
+          $exe = Join-Path $PWD "dist/WMK-Studio-Web.exe"
+          $process = Start-Process -FilePath $exe -ArgumentList @("--self-test") -PassThru -Wait
+          if ($process.ExitCode -ne 0) { throw "Autoteste do Studio Web falhou: $($process.ExitCode)" }
       - name: Executar EXE sem abrir janela
         shell: pwsh
         run: |
@@ -69,6 +85,22 @@ jobs:
           Copy-Item LICENSE dist/WMK-Craft-Studio/
           Copy-Item -Recurse docs dist/WMK-Craft-Studio/
           Compress-Archive -Path dist/WMK-Craft-Studio -DestinationPath WMK-Craft-Studio-Windows-x64.zip
+      - name: Criar distribuição do Studio Web
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist/WMK-Studio-Web-Pacote | Out-Null
+          Copy-Item dist/WMK-Studio-Web.exe dist/WMK-Studio-Web-Pacote/
+          Copy-Item README.md dist/WMK-Studio-Web-Pacote/
+          Copy-Item LICENSE dist/WMK-Studio-Web-Pacote/
+          Copy-Item -Recurse docs dist/WMK-Studio-Web-Pacote/
+          Compress-Archive -Path dist/WMK-Studio-Web-Pacote -DestinationPath WMK-Studio-Web-Windows-x64.zip
+      - name: Publicar ZIP do Studio Web
+        uses: actions/upload-artifact@v4
+        with:
+          name: WMK-Studio-Web-Windows-x64
+          path: WMK-Studio-Web-Windows-x64.zip
+          if-no-files-found: error
+          retention-days: 14
       - name: Publicar ZIP para download
         uses: actions/upload-artifact@v4
         with:

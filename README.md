@@ -7,6 +7,14 @@
 
 > **Política de propriedade intelectual — essencial:** o WMK Craft Studio **NÃO é um clonador de programas**. Ele **não deve** copiar software de terceiros, reproduzir interfaces de maneira substancialmente idêntica, descompilar arquivos, extrair código, contornar proteções, usar marcas alheias para causar confusão, nem incorporar imagens/sons/documentação protegidos sem autorização. O propósito é criar **soluções próprias e independentes** a partir da identificação de necessidades e de funcionalidades observáveis lícitas.
 
+## Experimente o primeiro Studio Web (MVP)
+
+**Agora há um fluxo funcional sem programação para criar sites de demonstração**, com galeria, prévia executável, alterações simples por texto e exportação ZIP. Não é ainda um agente de IA: são templates autorais e comandos reconhecidos por regras.
+
+No Windows: baixe esta branch e execute `INICIAR-STUDIO-WEB.cmd` com Python 3.12+. Ou, após a compilação no GitHub Actions, baixe o artefato **WMK-Studio-Web-Windows-x64** e abra `WMK-Studio-Web.exe` sem instalar Python.
+
+[Manual detalhado do primeiro site](docs/PRIMEIRO-SITE.md). O objetivo seguinte é integrar a geração por modelos de IA com testes reais e depois oferecer web apps e jogos 2D. **A vitrine atual não tem carrinho ou pagamentos**.
+
 ## A visão principal: criar sem saber programar
 
 **O WMK Craft Studio será uma fábrica de projetos autorais para iniciantes, inspirada no fluxo de criação por conversa do Google AI Studio Apps (não em sua identidade visual ou código).**
