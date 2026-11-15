@@ -143,7 +143,7 @@ class ProjectManager:
         lines = [
             f"# Relatório — {project['name']}",
             "",
-            f"- Identificador: \`{project['id']}\`",
+            f"- Identificador: `{project['id']}`",
             f"- Tipo: {project['kind']}",
             f"- Situação: {project['status']}",
             f"- Atualizado em (UTC): {project['updated_at']}",
