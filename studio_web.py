@@ -8,6 +8,8 @@ import argparse
 import json
 import os
 import re
+import sys
+import tempfile
 import webbrowser
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -209,10 +211,35 @@ def serve(port: int = 8765, root: str | None = None, launch: bool = False) -> No
         server.server_close()
 
 
+def self_test() -> int:
+    """Exercita também o executável empacotado sem abrir browser ou porta."""
+    try:
+        with tempfile.TemporaryDirectory(prefix="wmk-web-smoke-") as directory:
+            manager = ProjectManager(directory)
+            factory = SiteFactory(manager)
+            project = factory.create("Verificação Web", "Site de demonstração original.")
+            factory.change(project, "Mude a cor para azul")
+            folder = manager._safe_directory(project["id"]) / "arquivos"
+            if "#2864c5" not in (folder / "style.css").read_text(encoding="utf-8"):
+                return 1
+            if not factory.zip_bytes(project):
+                return 1
+            if not (BASE / "index.html").is_file():
+                return 1
+        print("WMK Studio Web: autoteste aprovado.")
+        return 0
+    except Exception as exc:
+        print(f"WMK Studio Web: falha no autoteste: {exc}", file=sys.stderr)
+        return 1
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="WMK Craft Studio: protótipo web local sem código")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--root", default=os.environ.get("WMK_PROJECTS_DIR"))
     parser.add_argument("--open", action="store_true")
+    parser.add_argument("--self-test", action="store_true", help="Testa site e pacote sem abrir interface")
     args = parser.parse_args()
-    serve(args.port, args.root, args.open)
+    if args.self_test:
+        raise SystemExit(self_test())
+    serve(args.port, args.root, args.open or bool(getattr(sys, "frozen", False)))
