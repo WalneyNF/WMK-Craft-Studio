@@ -51,9 +51,19 @@ O arquivo de projeto é salvo com troca atômica do arquivo temporário. Isso re
 
 ## Integrações
 
-A aba **Integrações** apenas verifica se `craft-anything-cli`, `rea`, `node`, `npx` e `git` estão no PATH. A presença do comando **não** comprova que ele esteja instalado corretamente, nem que o aplicativo já possa utilizá-lo.
+A aba **Ferramentas** apenas verifica se `craft-anything-cli`, `node`, `npx` e `git` estão no PATH. A presença do comando **não** comprova que ele esteja instalado corretamente, nem que o aplicativo já possa utilizá-lo.
 
-Nenhuma ferramenta externa é executada automaticamente nesta versão.
+Nenhuma ferramenta externa é executada automaticamente nesta versão. O REA não integra o WMK Craft Studio.
+
+## Estudo funcional — alternativas originais
+
+Na aba **Estudo funcional**, registre uma referência opcional, funcionalidades observadas legitimamente, necessidades dos usuários, a solução original que pretende produzir e diferenciais. Não envie arquivos protegidos nem reproduza interfaces, marcas ou código de terceiros.
+
+Clique em **Copiar proposta MD** ou **Salvar proposta MD**. O relatório `alternativa-original.md` será criado na pasta `relatorios/` do projeto.
+
+A ferramenta **não** lê executáveis, não examina código de terceiros nem gera automaticamente versões de outro programa. Esta etapa apenas organiza observações feitas pelo usuário.
+
+Consulte a [Política de Originalidade](POLITICA_DE_ORIGINALIDADE.md). A integração opcional com o [FreeLLMAPI](PROVEDORES_IA.md) ainda é um plano, não uma funcionalidade pronta.
 
 ## Autoteste
 
@@ -73,4 +83,4 @@ Ainda não existem: geração de jogos, editor de código, agentes autônomos, i
 
 Walney Moreira Klein — walneyk@hotmail.com
 
-Licença MIT. As licenças e marcas dos dois motores externos não são incluídas neste repositório.
+Licença MIT. As licenças, avisos e marcas de ferramentas externas não são incluídos neste repositório.
