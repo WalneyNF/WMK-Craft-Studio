@@ -50,6 +50,31 @@ class ProjectManagerTests(unittest.TestCase):
         self.assertTrue(path.is_file())
         self.assertEqual(path.read_text(encoding="utf-8"), report)
 
+    def test_reference_brief_is_original_and_persisted(self):
+        project = self.manager.create("Alternativa de agenda", "desktop")
+        project["reference_study"] = {
+            "reference_name": "Aplicativo de agenda genérico",
+            "observed_features": "Lembretes e calendário",
+            "user_needs": "Alertas offline para consultas",
+            "original_solution": "Calendário próprio com armazenamento local",
+            "differentiators": "Acessibilidade e backup",
+        }
+        self.manager.save(project)
+        loaded = self.manager.load(project["id"])
+        self.assertEqual(loaded["reference_study"]["user_needs"], "Alertas offline para consultas")
+        text = self.manager.reference_markdown(loaded)
+        self.assertIn("Calendário próprio", text)
+        self.assertIn("Sem clonagem", text)
+        output = self.manager.export_reference_brief(loaded)
+        self.assertIn("alternativa-original.md", str(output))
+        self.assertTrue(output.is_file())
+
+    def test_reject_oversized_reference_notes(self):
+        project = self.manager.create("Estudo novo")
+        project["reference_study"]["observed_features"] = "A" * 10001
+        with self.assertRaises(ValueError):
+            self.manager.save(project)
+
     def test_list_ignores_broken_manifest(self):
         broken = Path(self.directory.name) / "quebrado"
         broken.mkdir()
