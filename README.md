@@ -78,7 +78,11 @@ Leia também [POLITICA_DE_ORIGINALIDADE.md](docs/POLITICA_DE_ORIGINALIDADE.md).
 
 O [roadmap](docs/ROADMAP.md) descreve as etapas planejadas. O [manual](docs/MANUAL.md) explica o protótipo e a [arquitetura](docs/ARQUITETURA.md) identifica os módulos já existentes.
 
-[Craft Anything](https://github.com/WalneyNF/craft-anything) poderá ser avaliado no futuro como executor de **novos projetos originais**, somente com operações compatíveis com esta política. **REA não integra o produto nem está no roadmap**: não haverá módulo de engenharia reversa.
+[Craft Anything](https://github.com/WalneyNF/craft-anything) poderá ser avaliado no futuro como executor de **novos projetos originais**, somente com operações compatíveis com esta política.
+
+[FreeLLMAPI](https://github.com/WalneyNF/freellmapi) poderá ser integrado como **gateway opcional de modelos de IA**, com funcionamento local do roteador, autenticação e aviso sobre os dados enviados aos provedores externos. Leia [PROVEDORES_IA.md](docs/PROVEDORES_IA.md). **Essa integração ainda não está implementada.**
+
+**REA não integra o produto nem está no roadmap**: não haverá módulo de engenharia reversa.
 
 Os códigos dos repositórios externos não são copiados para esta aplicação. Seus direitos, licenças, avisos e marcas permanecem com os titulares.
 
