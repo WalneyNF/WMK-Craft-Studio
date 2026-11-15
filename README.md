@@ -7,6 +7,18 @@
 
 > **Política de propriedade intelectual — essencial:** o WMK Craft Studio **NÃO é um clonador de programas**. Ele **não deve** copiar software de terceiros, reproduzir interfaces de maneira substancialmente idêntica, descompilar arquivos, extrair código, contornar proteções, usar marcas alheias para causar confusão, nem incorporar imagens/sons/documentação protegidos sem autorização. O propósito é criar **soluções próprias e independentes** a partir da identificação de necessidades e de funcionalidades observáveis lícitas.
 
+## A visão principal: criar sem saber programar
+
+**O WMK Craft Studio será uma fábrica de projetos autorais para iniciantes, inspirada no fluxo de criação por conversa do Google AI Studio Apps (não em sua identidade visual ou código).**
+
+A pessoa escolherá **Site**, **Aplicativo** ou **Jogo 2D**, explicará sua ideia em português e poderá **ver uma prévia executável, pedir alterações e baixar o projeto** sem escrever código. O modo avançado permitirá abrir arquivos e entender a implementação.
+
+**Essa experiência é o objetivo das próximas versões e ainda não existe no protótipo desktop 0.1.** O projeto crescerá a partir de templates originais, agentes controlados e testes reais. A IA não garante perfeição.
+
+- [Experiência para quem não programa](docs/EXPERIENCIA-SEM-CODIGO.md)
+- [Visão técnica e fluxo inspirado em AI Studio Apps](docs/VISAO-APP-BUILDER.md)
+- [Inventário e triagem de 180 repositórios](docs/INVENTARIO-DE-FORKS.md)
+
 ## Para que serve?
 
 O usuário descreve um problema, pode informar uma referência de produto que conhece, registra **apenas características observáveis e legítimas**, define melhorias e elabora um projeto **original**. Os próximos módulos ajudarão a implementar e testar essa proposta.
