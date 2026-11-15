@@ -2,6 +2,22 @@
 
 Este documento separa o que existe do que ainda precisa ser implementado. Não se deve declarar uma etapa concluída apenas porque foi planejada.
 
+## Direção prioritária — experiência sem código
+
+**Público:** iniciantes que desejam criar sites, web apps e jogos 2D sem dominar programação.
+
+- [ ] Substituir a interface do protótipo inicial por um Studio web local com **prompt + prévia executável + chat de mudanças**.
+- [ ] Galeria com **Site**, **Aplicativo** e **Jogo 2D**, cada categoria começando com **um template autoral verificado**.
+- [ ] Adaptar um motor de geração web, após POC, sem copiar programas de terceiros.
+- [ ] Oferecer botão **Criar**, **Testar**, **Corrigir**, **Baixar projeto** e **Publicar**, com interface inteiramente em português.
+- [ ] Preservar uma área **Avançado** para código, erros, logs, parâmetros, consumo de IA e relatórios.
+- [ ] Garantir que uma aplicação gerada seja realmente executável e passe por testes independentes.
+- [ ] Manter FreeLLMAPI opcional e funcionamento offline limitado a templates e edição manual.
+
+Detalhes: [EXPERIENCIA-SEM-CODIGO.md](EXPERIENCIA-SEM-CODIGO.md), [VISAO-APP-BUILDER.md](VISAO-APP-BUILDER.md) e [INVENTARIO-DE-FORKS.md](INVENTARIO-DE-FORKS.md).
+
+**Nota:** os itens abaixo descrevem fases da fundação desktop antiga. A fundação não implementa ainda geração ou prévia por conversa.
+
 ## Etapa 0.1 — Fundação desktop (implementada nesta branch)
 
 - [x] Aplicativo desktop em português (Tkinter / Python padrão)
