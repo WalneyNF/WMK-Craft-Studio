@@ -12,6 +12,7 @@ from pathlib import Path
 SCHEMA_VERSION = 1
 PROJECT_FILE = "wmk_project.json"
 PROJECT_TYPES = ("livre", "web", "desktop", "jogo")
+REFERENCE_FIELDS = ("reference_name", "observed_features", "user_needs", "original_solution", "differentiators")
 
 
 def now_iso() -> str:
@@ -81,6 +82,7 @@ class ProjectManager:
             "name": name.strip(),
             "kind": kind,
             "description": description,
+            "reference_study": {key: "" for key in REFERENCE_FIELDS},
             "status": "rascunho",
             "created_at": created,
             "updated_at": created,
@@ -123,6 +125,12 @@ class ProjectManager:
             raise FileNotFoundError("Projeto não existe.")
         if project.get("schema_version") != SCHEMA_VERSION:
             raise ValueError("Versão incompatível.")
+        study = project.get("reference_study", {})
+        if not isinstance(study, dict) or any(
+            not isinstance(study.get(key, ""), str) or len(study.get(key, "")) > 10000
+            for key in REFERENCE_FIELDS
+        ):
+            raise ValueError("Os campos do estudo devem ser textos de até 10.000 caracteres.")
         project["updated_at"] = now_iso()
         atomic_write_json(directory / PROJECT_FILE, project)
 
@@ -175,12 +183,55 @@ class ProjectManager:
         return output
 
 
+    def reference_markdown(self, project: dict) -> str:
+        """Gera proposta conceitual a partir de observações escritas pelo usuário."""
+        study = project.get("reference_study") or {}
+        fields = (
+            ("Referência funcional (opcional)", "reference_name"),
+            ("Funcionalidades observáveis", "observed_features"),
+            ("Necessidades dos usuários", "user_needs"),
+            ("Proposta de solução original", "original_solution"),
+            ("Diferenciais e decisões próprias", "differentiators"),
+        )
+        lines = [
+            f"# Brief de alternativa original — {project['name']}",
+            "",
+            "> Não é reprodução do software de referência, análise de código,",
+            "> engenharia reversa ou parecer jurídico. Anotações informadas pelo usuário.",
+            "",
+        ]
+        for label, key in fields:
+            lines.extend([f"## {label}", "", study.get(key, "") or "Não informado.", ""])
+        lines.extend([
+            "## Critérios de originalidade",
+            "",
+            "- [ ] Código próprio ou dependências com licença compatível",
+            "- [ ] Interface, imagens, sons e textos próprios ou licenciados",
+            "- [ ] Marca própria, sem confusão de origem",
+            "- [ ] Sem clonagem, extração de código ou engenharia reversa",
+            "- [ ] Materiais de referência usados com direitos suficientes",
+            "- [ ] Testes independentes e revisão antes de publicar",
+            "",
+            "Documentação: docs/POLITICA_DE_ORIGINALIDADE.md",
+            "",
+            "---",
+            "Walney Moreira Klein — walneyk@hotmail.com",
+            "",
+        ])
+        return "\n".join(lines)
+
+    def export_reference_brief(self, project: dict) -> Path:
+        directory = self._safe_directory(project["id"]) / "relatorios"
+        directory.mkdir(exist_ok=True)
+        output = directory / "alternativa-original.md"
+        output.write_text(self.reference_markdown(project), encoding="utf-8")
+        return output
+
 def tool_status() -> dict[str, str | None]:
     """Descobre comandos instalados; não executa código externo."""
     from shutil import which
     return {
         "Craft Anything CLI": which("craft-anything-cli"),
-        "REA": which("rea"),
         "Node.js": which("node"),
         "npx": which("npx"),
         "Git": which("git"),
