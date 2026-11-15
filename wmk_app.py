@@ -108,13 +108,16 @@ class Studio(tk.Tk):
         self.notebook.pack(fill="both", expand=True)
         overview = ttk.Frame(self.notebook, padding=18)
         tasks = ttk.Frame(self.notebook, padding=18)
+        study = ttk.Frame(self.notebook, padding=18)
         history = ttk.Frame(self.notebook, padding=18)
         tools = ttk.Frame(self.notebook, padding=18)
         self.notebook.add(overview, text="Visão geral")
+        self.notebook.add(study, text="Estudo funcional")
         self.notebook.add(tasks, text="Tarefas")
         self.notebook.add(history, text="Histórico")
-        self.notebook.add(tools, text="Integrações")
+        self.notebook.add(tools, text="Ferramentas")
         self._overview_tab(overview)
+        self._reference_tab(study)
         self._tasks_tab(tasks)
         self._history_tab(history)
         self._tools_tab(tools)
@@ -143,6 +146,45 @@ class Studio(tk.Tk):
         ttk.Button(buttons, text="Exportar relatório MD",
                    command=self.export_report).pack(side="left", padx=9)
         ttk.Button(buttons, text="Abrir pasta", command=self.open_folder).pack(side="left")
+
+    def _reference_tab(self, frame):
+        ttk.Label(frame, text="CRIAR UMA ALTERNATIVA ORIGINAL",
+                  font=("Segoe UI Semibold", 14)).pack(anchor="w")
+        ttk.Label(
+            frame,
+            text=("Registre apenas funcionalidades observadas de modo legítimo. "
+                  "Não copie código, telas, marcas, recursos protegidos ou arquivos de terceiros. "
+                  "Este módulo registra suas observações; não examina executáveis."),
+            style="Muted.TLabel", wraplength=710, justify="left"
+        ).pack(anchor="w", pady=(7, 9))
+        self.reference_inputs = {}
+        fields = [
+            ("reference_name", "Referência funcional (opcional)"),
+            ("observed_features", "Quais funcionalidades você observou?"),
+            ("user_needs", "Quais necessidades das pessoas deseja resolver?"),
+            ("original_solution", "Como será a SUA solução, com design e código próprios?"),
+            ("differentiators", "Quais melhorias e diferenciais pretende oferecer?"),
+        ]
+        for key, label in fields:
+            ttk.Label(frame, text=label).pack(anchor="w", pady=(5, 2))
+            if key == "reference_name":
+                widget = tk.Entry(frame, bg=PANEL, fg=TEXT, insertbackground=TEXT,
+                                  relief="flat", font=("Segoe UI", 10))
+                widget.pack(fill="x", ipady=5)
+            else:
+                widget = tk.Text(frame, height=2, wrap="word", bg=PANEL, fg=TEXT,
+                                  insertbackground=TEXT, relief="flat",
+                                  padx=8, pady=5, font=("Segoe UI", 10))
+                widget.pack(fill="x")
+            self.reference_inputs[key] = widget
+        buttons = ttk.Frame(frame)
+        buttons.pack(fill="x", pady=(12, 0))
+        ttk.Button(buttons, text="Salvar estudo", style="Accent.TButton",
+                   command=self.save_current).pack(side="left")
+        ttk.Button(buttons, text="Copiar proposta MD",
+                   command=self.copy_reference_brief).pack(side="left", padx=(8, 0))
+        ttk.Button(buttons, text="Salvar proposta MD",
+                   command=self.export_reference_brief).pack(side="left", padx=(8, 0))
 
     def _tasks_tab(self, frame):
         ttk.Label(frame, text="TAREFAS DO PROJETO", font=("Segoe UI Semibold", 14)).pack(anchor="w")
@@ -178,9 +220,10 @@ class Studio(tk.Tk):
 
     def _tools_tab(self, frame):
         ttk.Label(frame, text="INTEGRAÇÕES EXTERNAS", font=("Segoe UI Semibold", 14)).pack(anchor="w")
-        info = ("Esta versão apenas identifica comandos no PATH. Ainda não inicia agentes, "
-                "nem envia arquivos a serviços externos. As integrações serão implementadas "
-                "por adaptadores isolados, com autorização e testes próprios.")
+        info = ("Esta versão identifica comandos no PATH, sem executá-los. "
+                "O WMK não clona programas e não realiza engenharia reversa. "
+                "A integração futura só poderá criar projetos originais, "
+                "respeitando as licenças e a política de propriedade intelectual.")
         ttk.Label(frame, text=info, wraplength=710, justify="left",
                   style="Muted.TLabel").pack(anchor="w", pady=(8, 18))
         self.tool_text = ScrolledText(frame, height=11, wrap="word", bg=PANEL, fg=TEXT,
@@ -242,6 +285,13 @@ class Studio(tk.Tk):
             text=f"Tipo: {project['kind']}   •   Pasta: {self.manager.root / project['id']}")
         self.description.delete("1.0", "end")
         self.description.insert("1.0", project.get("description", ""))
+        study = project.get("reference_study") or {}
+        for key, widget in self.reference_inputs.items():
+            widget.delete("1.0", "end") if isinstance(widget, tk.Text) else widget.delete(0, "end")
+            if isinstance(widget, tk.Text):
+                widget.insert("1.0", study.get(key, ""))
+            else:
+                widget.insert(0, study.get(key, ""))
         self._refresh_tasks()
         self._refresh_history()
         self.status_var.set(f"Projeto selecionado: {project['name']}")
@@ -289,6 +339,11 @@ class Studio(tk.Tk):
             return
         try:
             self.current["description"] = self.description.get("1.0", "end-1c")
+            self.current["reference_study"] = {
+                key: (widget.get("1.0", "end-1c") if isinstance(widget, tk.Text)
+                      else widget.get())
+                for key, widget in self.reference_inputs.items()
+            }
             self.manager.save(self.current)
             self.status_var.set("Projeto salvo com sucesso.")
         except (OSError, ValueError) as exc:
@@ -358,6 +413,27 @@ class Studio(tk.Tk):
             self.save_current(silent=True)
             file = self.manager.export_report(self.current)
             self.status_var.set(f"Relatório salvo em: {file}")
+            messagebox.showinfo("Exportação concluída", f"Arquivo salvo:\n{file}")
+        except (OSError, ValueError) as exc:
+            messagebox.showerror("Erro na exportação", str(exc))
+
+    def copy_reference_brief(self):
+        if not self.current:
+            messagebox.showinfo("Proposta", "Selecione um projeto primeiro.")
+            return
+        self.save_current(silent=True)
+        self.clipboard_clear()
+        self.clipboard_append(self.manager.reference_markdown(self.current))
+        self.status_var.set("Brief de alternativa original copiado em Markdown.")
+
+    def export_reference_brief(self):
+        if not self.current:
+            messagebox.showinfo("Proposta", "Selecione um projeto primeiro.")
+            return
+        try:
+            self.save_current(silent=True)
+            file = self.manager.export_reference_brief(self.current)
+            self.status_var.set(f"Proposta original salva em: {file}")
             messagebox.showinfo("Exportação concluída", f"Arquivo salvo:\n{file}")
         except (OSError, ValueError) as exc:
             messagebox.showerror("Erro na exportação", str(exc))
